@@ -1,0 +1,38 @@
+version: "3.2"
+services:
+
+  redis:
+    build:
+      context: .
+      dockerfile: $PWD/redis/Dockerfile-redis
+    command: "redis-server /etc/redis.conf --requirepass ${REDIS_PASSWORD}"
+    volumes:
+     - $PWD/redis-data:/var/lib/redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+      start_period: 5s
+
+  greeting_service:
+    build:
+      context: .
+      dockerfile: $PWD/python/Dockerfile-python
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    depends_on: 
+      - redis
+
+  nginx:
+    build:
+      context: .
+      dockerfile: $PWD/nginx/Dockerfile-nginx
+    ports:
+      - 8080:80
+    depends_on:
+      - greeting_service

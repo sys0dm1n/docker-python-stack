@@ -1,0 +1,7 @@
+FROM redis:alpine
+
+RUN mkdir /var/lib/redis && chown redis:redis /var/lib/redis
+RUN mkdir /etc/redis 
+
+COPY ./redis/redis.conf /etc/redis.conf
+WORKDIR /home/redis
