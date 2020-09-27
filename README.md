@@ -10,7 +10,8 @@
 git, docker and docker-compose
 ### Clone Repository
 ```bash
-git clone 
+git clone git@github.com:sys0dm1n/docker-python-stack.git
+cd docker-python-stack
 ```
 ### Update files
 Update Redis password if needed in `.env` file.
